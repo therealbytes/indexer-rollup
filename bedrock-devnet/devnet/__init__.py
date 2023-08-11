@@ -17,6 +17,7 @@ pjoin = os.path.join
 parser = argparse.ArgumentParser(description='Bedrock devnet launcher')
 parser.add_argument('--monorepo-dir', help='Directory of the monorepo', default=os.getcwd())
 parser.add_argument('--deploy', help='Whether the contracts should be predeployed or deployed', type=bool, action=argparse.BooleanOptionalAction)
+parser.add_argument('--indexer', help='Whether the run the indexer', type=bool, action=argparse.BooleanOptionalAction)
 
 log = logging.getLogger()
 
@@ -57,6 +58,23 @@ def main():
     else:
       log.info('Devnet with smart contracts pre-deployed')
       devnet_prestate(paths)
+
+    if args.indexer:
+      devnet_indexer(paths)
+
+def devnet_indexer(paths):
+  wait_up(7545)
+  log.info('Bringing up L2-idx.')
+  run_command(['docker-compose', 'up', '-d', 'l2-idx'], cwd=paths.ops_bedrock_dir, env={
+      'PWD': paths.ops_bedrock_dir
+  })
+  wait_up(10545)
+  time.sleep(5)
+
+  log.info('Bringing up the node.')
+  run_command(['docker-compose', 'up', '-d', 'op-node-idx'], cwd=paths.ops_bedrock_dir, env={
+      'PWD': paths.ops_bedrock_dir,
+  })
 
 # Bring up the devnet where the L1 contracts are in the genesis state
 def devnet_prestate(paths):
