@@ -54,11 +54,13 @@ func CheckBatch(cfg *rollup.Config, log log.Logger, l1Blocks []eth.L1BlockRef, l
 		return BatchDrop
 	}
 
+	// TODO: The indexed chain's block hash corresponding to the indexer chain safe head should be derived from the
+	// indexer account trie and checked against Batch.ParentHash.
 	// dependent on above timestamp check. If the timestamp is correct, then it must build on top of the safe head.
-	if batch.Batch.ParentHash != l2SafeHead.Hash {
-		log.Warn("ignoring batch with mismatching parent hash", "current_safe_head", l2SafeHead.Hash)
-		return BatchDrop
-	}
+	// if batch.Batch.ParentHash != l2SafeHead.Hash {
+	// 	log.Warn("ignoring batch with mismatching parent hash", "current_safe_head", l2SafeHead.Hash)
+	// 	return BatchDrop
+	// }
 
 	// Filter out batches that were included too late.
 	if uint64(batch.Batch.EpochNum)+cfg.SeqWindowSize < batch.L1InclusionBlock.Number {

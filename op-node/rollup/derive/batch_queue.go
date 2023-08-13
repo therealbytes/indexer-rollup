@@ -209,6 +209,9 @@ batchLoop:
 	}
 
 	if nextBatch != nil {
+		// See: batches.go:CheckBatch
+		nextBatch.Batch.ParentHash = l2SafeHead.Hash
+
 		// advance epoch if necessary
 		if nextBatch.Batch.EpochNum == rollup.Epoch(epoch.Number)+1 {
 			bq.l1Blocks = bq.l1Blocks[1:]
