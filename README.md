@@ -1,3 +1,8 @@
+See also:
+- [Indexer rollup demo code](https://github.com/therealbytes/indexer-rollup-demo)
+- [Indexer op-geth fork](https://github.com/therealbytes/indexer-op-geth)
+
+---
 
 <div align="center">
   <br />
